@@ -1,0 +1,225 @@
+2025-01-02T15:42:42,888 [main] INFO  a.f.a.t.Tool$ - # APALACHE version: 0.46.1 | build: 0d72eb1
+2025-01-02T15:42:42,911 [main] INFO  a.f.a.t.t.o.ServerCmd - Starting server on port 8822...
+2025-01-02T15:42:50,860 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #0: SanyParser
+2025-01-02T15:42:52,363 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #0: SanyParser [OK]
+2025-01-02T15:42:52,365 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #1: TypeCheckerSnowcat
+2025-01-02T15:42:52,366 [zio-default-async-5] INFO  a.f.a.t.p.t.EtcTypeCheckerPassImpl -  > Running Snowcat .::.
+2025-01-02T15:42:52,957 [zio-default-async-5] INFO  a.f.a.t.p.t.EtcTypeCheckerPassImpl -  > Your types are purrfect!
+2025-01-02T15:42:52,959 [zio-default-async-5] INFO  a.f.a.t.p.t.EtcTypeCheckerPassImpl -  > All expressions are typed
+2025-01-02T15:42:52,960 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #1: TypeCheckerSnowcat [OK]
+2025-01-02T15:42:52,961 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #2: ConfigurationPass
+2025-01-02T15:42:52,971 [zio-default-async-5] INFO  a.f.a.t.p.p.ConfigurationPassImpl -   > Set the initialization predicate to q::init
+2025-01-02T15:42:52,973 [zio-default-async-5] INFO  a.f.a.t.p.p.ConfigurationPassImpl -   > Set the transition predicate to q::step
+2025-01-02T15:42:52,974 [zio-default-async-5] INFO  a.f.a.t.p.p.ConfigurationPassImpl -   > Set an invariant to q::inv
+2025-01-02T15:42:52,984 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #2: ConfigurationPass [OK]
+2025-01-02T15:42:52,985 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #3: DesugarerPass
+2025-01-02T15:42:52,985 [zio-default-async-5] INFO  a.f.a.t.p.p.DesugarerPassImpl -   > Desugaring...
+2025-01-02T15:42:53,013 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #3: DesugarerPass [OK]
+2025-01-02T15:42:53,013 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #4: InlinePass
+2025-01-02T15:42:53,014 [zio-default-async-5] INFO  a.f.a.t.p.p.InlinePassImpl - Leaving only relevant operators: CInitPrimed, q::init, q::initPrimed, q::inv, q::step
+2025-01-02T15:42:53,065 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #4: InlinePass [OK]
+2025-01-02T15:42:53,065 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #5: TemporalPass
+2025-01-02T15:42:53,066 [zio-default-async-5] INFO  a.f.a.t.p.p.TemporalPassImpl -   > Rewriting temporal operators...
+2025-01-02T15:42:53,066 [zio-default-async-5] INFO  a.f.a.t.p.p.TemporalPassImpl -   > No temporal property specified, nothing to encode
+2025-01-02T15:42:53,066 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #5: TemporalPass [OK]
+2025-01-02T15:42:53,067 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #6: InlinePass
+2025-01-02T15:42:53,067 [zio-default-async-5] INFO  a.f.a.t.p.p.InlinePassImpl - Leaving only relevant operators: CInitPrimed, q::init, q::initPrimed, q::inv, q::step
+2025-01-02T15:42:53,076 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #6: InlinePass [OK]
+2025-01-02T15:42:53,076 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #7: PrimingPass
+2025-01-02T15:42:53,080 [zio-default-async-5] INFO  a.f.a.t.p.a.PrimingPassImpl -   > Introducing q::initPrimed for q::init'
+2025-01-02T15:42:53,083 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #7: PrimingPass [OK]
+2025-01-02T15:42:53,083 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #8: VCGen
+2025-01-02T15:42:53,084 [zio-default-async-5] INFO  a.f.a.t.b.p.VCGenPassImpl -   > Producing verification conditions from the invariant q::inv
+2025-01-02T15:42:53,098 [zio-default-async-5] INFO  a.f.a.t.b.VCGenerator -   > VCGen produced 1 verification condition(s)
+2025-01-02T15:42:53,101 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #8: VCGen [OK]
+2025-01-02T15:42:53,101 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #9: PreprocessingPass
+2025-01-02T15:42:53,101 [zio-default-async-5] INFO  a.f.a.t.p.p.PreproPassImpl -   > Before preprocessing: unique renaming
+2025-01-02T15:42:53,117 [zio-default-async-5] INFO  a.f.a.t.p.p.PreproPassImpl -  > Applying standard transformations:
+2025-01-02T15:42:53,118 [zio-default-async-5] INFO  a.f.a.t.p.p.PreproPassImpl -   > PrimePropagation
+2025-01-02T15:42:53,122 [zio-default-async-5] INFO  a.f.a.t.p.p.PreproPassImpl -   > Desugarer
+2025-01-02T15:42:53,125 [zio-default-async-5] INFO  a.f.a.t.p.p.PreproPassImpl -   > UniqueRenamer
+2025-01-02T15:42:53,132 [zio-default-async-5] INFO  a.f.a.t.p.p.PreproPassImpl -   > Normalizer
+2025-01-02T15:42:53,144 [zio-default-async-5] INFO  a.f.a.t.p.p.PreproPassImpl -   > Keramelizer
+2025-01-02T15:42:53,170 [zio-default-async-5] INFO  a.f.a.t.p.p.PreproPassImpl -   > After preprocessing: UniqueRenamer
+2025-01-02T15:42:53,230 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #9: PreprocessingPass [OK]
+2025-01-02T15:42:53,231 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #10: TransitionFinderPass
+2025-01-02T15:42:53,256 [zio-default-async-5] INFO  a.f.a.t.p.a.TransitionPassImpl -   > Found 1 initializing transitions
+2025-01-02T15:42:53,285 [zio-default-async-5] INFO  a.f.a.t.p.a.TransitionPassImpl -   > Found 2 transitions
+2025-01-02T15:42:53,289 [zio-default-async-5] INFO  a.f.a.t.p.a.TransitionPassImpl -   > No constant initializer
+2025-01-02T15:42:53,293 [zio-default-async-5] INFO  a.f.a.t.p.a.TransitionPassImpl -   > Applying unique renaming
+2025-01-02T15:42:53,306 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #10: TransitionFinderPass [OK]
+2025-01-02T15:42:53,307 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #11: OptimizationPass
+2025-01-02T15:42:53,330 [zio-default-async-5] INFO  a.f.a.t.p.p.OptPassImpl -  > Applying optimizations:
+2025-01-02T15:42:53,334 [zio-default-async-5] INFO  a.f.a.t.p.p.OptPassImpl -   > ConstSimplifier
+2025-01-02T15:42:53,346 [zio-default-async-5] INFO  a.f.a.t.p.p.OptPassImpl -   > ExprOptimizer
+2025-01-02T15:42:53,351 [zio-default-async-5] INFO  a.f.a.t.p.p.OptPassImpl -   > SetMembershipSimplifier
+2025-01-02T15:42:53,362 [zio-default-async-5] INFO  a.f.a.t.p.p.OptPassImpl -   > ConstSimplifier
+2025-01-02T15:42:53,374 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #11: OptimizationPass [OK]
+2025-01-02T15:42:53,375 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #12: AnalysisPass
+2025-01-02T15:42:53,394 [zio-default-async-5] INFO  a.f.a.t.b.p.AnalysisPassImpl -  > Marking skolemizable existentials and sets to be expanded...
+2025-01-02T15:42:53,395 [zio-default-async-5] INFO  a.f.a.t.b.p.AnalysisPassImpl -   > Skolemization
+2025-01-02T15:42:53,396 [zio-default-async-5] INFO  a.f.a.t.b.p.AnalysisPassImpl -   > Expansion
+2025-01-02T15:42:53,418 [zio-default-async-5] INFO  a.f.a.t.b.p.AnalysisPassImpl -   > Remove unused let-in defs
+2025-01-02T15:42:53,430 [zio-default-async-5] INFO  a.f.a.t.b.p.AnalysisPassImpl -  > Running analyzers...
+2025-01-02T15:42:53,438 [zio-default-async-5] INFO  a.f.a.t.b.p.AnalysisPassImpl -   > Introduced expression grades
+2025-01-02T15:42:53,439 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #12: AnalysisPass [OK]
+2025-01-02T15:42:53,440 [zio-default-async-5] INFO  a.f.a.i.p.PassChainExecutor$ - PASS #13: BoundedChecker
+2025-01-02T15:42:53,520 [zio-default-async-5] DEBUG a.f.a.t.b.s.Z3SolverContext - Creating Z3 solver context 0
+2025-01-02T15:42:57,379 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #0, transition #0
+2025-01-02T15:42:57,380 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:57,494 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 0: Transition #0. Is it enabled?
+2025-01-02T15:42:57,500 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 0: Transition #0 is enabled
+2025-01-02T15:42:57,501 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 0: Checking 1 state invariants
+2025-01-02T15:42:57,503 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 0: Checking state invariant 0
+2025-01-02T15:42:57,562 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 0: state invariant 0 holds.
+2025-01-02T15:42:57,581 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 0: picking a transition out of 1 transition(s)
+2025-01-02T15:42:57,583 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #1, transition #0
+2025-01-02T15:42:57,584 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:57,634 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 1: Transition #0. Is it enabled?
+2025-01-02T15:42:57,636 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 1: Transition #0 is enabled
+2025-01-02T15:42:57,637 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 1: Checking 1 state invariants
+2025-01-02T15:42:57,637 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 1: Checking state invariant 0
+2025-01-02T15:42:57,660 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 1: state invariant 0 holds.
+2025-01-02T15:42:57,661 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #1, transition #1
+2025-01-02T15:42:57,661 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:57,706 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 1: Transition #1. Is it enabled?
+2025-01-02T15:42:57,708 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - Step 1: Transition #1 is disabled
+2025-01-02T15:42:57,709 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 1: picking a transition out of 1 transition(s)
+2025-01-02T15:42:57,710 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #2, transition #0
+2025-01-02T15:42:57,710 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:57,748 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 2: Transition #0. Is it enabled?
+2025-01-02T15:42:57,750 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 2: Transition #0 is enabled
+2025-01-02T15:42:57,750 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 2: Checking 1 state invariants
+2025-01-02T15:42:57,750 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 2: Checking state invariant 0
+2025-01-02T15:42:57,778 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 2: state invariant 0 holds.
+2025-01-02T15:42:57,779 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #2, transition #1
+2025-01-02T15:42:57,779 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:57,818 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 2: Transition #1. Is it enabled?
+2025-01-02T15:42:57,820 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 2: Transition #1 is enabled
+2025-01-02T15:42:57,820 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 2: Checking 1 state invariants
+2025-01-02T15:42:57,821 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 2: Checking state invariant 0
+2025-01-02T15:42:57,848 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 2: state invariant 0 holds.
+2025-01-02T15:42:57,852 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 2: picking a transition out of 2 transition(s)
+2025-01-02T15:42:57,898 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #3, transition #0
+2025-01-02T15:42:57,898 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:57,932 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 3: Transition #0. Is it enabled?
+2025-01-02T15:42:57,934 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 3: Transition #0 is enabled
+2025-01-02T15:42:57,934 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 3: Checking 1 state invariants
+2025-01-02T15:42:57,935 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 3: Checking state invariant 0
+2025-01-02T15:42:57,966 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 3: state invariant 0 holds.
+2025-01-02T15:42:57,969 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #3, transition #1
+2025-01-02T15:42:57,969 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:58,032 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 3: Transition #1. Is it enabled?
+2025-01-02T15:42:58,036 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 3: Transition #1 is enabled
+2025-01-02T15:42:58,036 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 3: Checking 1 state invariants
+2025-01-02T15:42:58,036 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 3: Checking state invariant 0
+2025-01-02T15:42:58,080 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 3: state invariant 0 holds.
+2025-01-02T15:42:58,083 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 3: picking a transition out of 2 transition(s)
+2025-01-02T15:42:58,099 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #4, transition #0
+2025-01-02T15:42:58,099 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:58,132 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 4: Transition #0. Is it enabled?
+2025-01-02T15:42:58,134 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 4: Transition #0 is enabled
+2025-01-02T15:42:58,134 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 4: Checking 1 state invariants
+2025-01-02T15:42:58,134 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 4: Checking state invariant 0
+2025-01-02T15:42:58,244 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 4: state invariant 0 holds.
+2025-01-02T15:42:58,247 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #4, transition #1
+2025-01-02T15:42:58,247 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:58,277 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 4: Transition #1. Is it enabled?
+2025-01-02T15:42:58,285 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 4: Transition #1 is enabled
+2025-01-02T15:42:58,286 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 4: Checking 1 state invariants
+2025-01-02T15:42:58,286 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 4: Checking state invariant 0
+2025-01-02T15:42:58,350 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 4: state invariant 0 holds.
+2025-01-02T15:42:58,353 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 4: picking a transition out of 2 transition(s)
+2025-01-02T15:42:58,367 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #5, transition #0
+2025-01-02T15:42:58,367 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:58,395 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 5: Transition #0. Is it enabled?
+2025-01-02T15:42:58,405 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 5: Transition #0 is enabled
+2025-01-02T15:42:58,405 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 5: Checking 1 state invariants
+2025-01-02T15:42:58,406 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 5: Checking state invariant 0
+2025-01-02T15:42:58,733 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 5: state invariant 0 holds.
+2025-01-02T15:42:58,736 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #5, transition #1
+2025-01-02T15:42:58,737 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:58,801 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 5: Transition #1. Is it enabled?
+2025-01-02T15:42:58,817 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 5: Transition #1 is enabled
+2025-01-02T15:42:58,818 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 5: Checking 1 state invariants
+2025-01-02T15:42:58,818 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 5: Checking state invariant 0
+2025-01-02T15:42:59,248 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 5: state invariant 0 holds.
+2025-01-02T15:42:59,252 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 5: picking a transition out of 2 transition(s)
+2025-01-02T15:42:59,264 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #6, transition #0
+2025-01-02T15:42:59,265 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:59,292 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 6: Transition #0. Is it enabled?
+2025-01-02T15:42:59,301 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 6: Transition #0 is enabled
+2025-01-02T15:42:59,301 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 6: Checking 1 state invariants
+2025-01-02T15:42:59,301 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 6: Checking state invariant 0
+2025-01-02T15:42:59,745 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 6: state invariant 0 holds.
+2025-01-02T15:42:59,748 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #6, transition #1
+2025-01-02T15:42:59,748 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:42:59,768 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 6: Transition #1. Is it enabled?
+2025-01-02T15:42:59,778 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 6: Transition #1 is enabled
+2025-01-02T15:42:59,779 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 6: Checking 1 state invariants
+2025-01-02T15:42:59,779 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 6: Checking state invariant 0
+2025-01-02T15:43:00,115 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 6: state invariant 0 holds.
+2025-01-02T15:43:00,119 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 6: picking a transition out of 2 transition(s)
+2025-01-02T15:43:00,137 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #7, transition #0
+2025-01-02T15:43:00,142 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:43:00,166 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 7: Transition #0. Is it enabled?
+2025-01-02T15:43:00,180 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 7: Transition #0 is enabled
+2025-01-02T15:43:00,181 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 7: Checking 1 state invariants
+2025-01-02T15:43:00,181 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 7: Checking state invariant 0
+2025-01-02T15:43:00,985 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 7: state invariant 0 holds.
+2025-01-02T15:43:00,989 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #7, transition #1
+2025-01-02T15:43:00,989 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:43:01,004 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 7: Transition #1. Is it enabled?
+2025-01-02T15:43:01,015 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 7: Transition #1 is enabled
+2025-01-02T15:43:01,016 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 7: Checking 1 state invariants
+2025-01-02T15:43:01,016 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 7: Checking state invariant 0
+2025-01-02T15:43:01,453 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 7: state invariant 0 holds.
+2025-01-02T15:43:01,457 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 7: picking a transition out of 2 transition(s)
+2025-01-02T15:43:01,465 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #8, transition #0
+2025-01-02T15:43:01,465 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:43:01,476 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 8: Transition #0. Is it enabled?
+2025-01-02T15:43:01,491 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 8: Transition #0 is enabled
+2025-01-02T15:43:01,491 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 8: Checking 1 state invariants
+2025-01-02T15:43:01,491 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 8: Checking state invariant 0
+2025-01-02T15:43:02,233 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 8: state invariant 0 holds.
+2025-01-02T15:43:02,236 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #8, transition #1
+2025-01-02T15:43:02,237 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:43:02,254 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 8: Transition #1. Is it enabled?
+2025-01-02T15:43:02,263 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 8: Transition #1 is enabled
+2025-01-02T15:43:02,264 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 8: Checking 1 state invariants
+2025-01-02T15:43:02,264 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 8: Checking state invariant 0
+2025-01-02T15:43:03,160 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 8: state invariant 0 holds.
+2025-01-02T15:43:03,163 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 8: picking a transition out of 2 transition(s)
+2025-01-02T15:43:03,187 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #9, transition #0
+2025-01-02T15:43:03,187 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:43:03,199 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 9: Transition #0. Is it enabled?
+2025-01-02T15:43:03,209 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 9: Transition #0 is enabled
+2025-01-02T15:43:03,210 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 9: Checking 1 state invariants
+2025-01-02T15:43:03,210 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 9: Checking state invariant 0
+2025-01-02T15:43:05,116 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 9: state invariant 0 holds.
+2025-01-02T15:43:05,177 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #9, transition #1
+2025-01-02T15:43:05,177 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:43:05,264 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 9: Transition #1. Is it enabled?
+2025-01-02T15:43:05,290 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 9: Transition #1 is enabled
+2025-01-02T15:43:05,290 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 9: Checking 1 state invariants
+2025-01-02T15:43:05,290 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 9: Checking state invariant 0
+2025-01-02T15:43:06,421 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 9: state invariant 0 holds.
+2025-01-02T15:43:06,426 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 9: picking a transition out of 2 transition(s)
+2025-01-02T15:43:06,439 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #10, transition #0
+2025-01-02T15:43:06,439 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:43:06,452 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 10: Transition #0. Is it enabled?
+2025-01-02T15:43:06,481 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 10: Transition #0 is enabled
+2025-01-02T15:43:06,481 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 10: Checking 1 state invariants
+2025-01-02T15:43:06,482 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 10: Checking state invariant 0
+2025-01-02T15:43:09,454 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 10: state invariant 0 holds.
+2025-01-02T15:43:09,460 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Step #10, transition #1
+2025-01-02T15:43:09,460 [zio-default-async-5] DEBUG a.f.a.t.b.t.TransitionExecutorImpl - Translating to SMT
+2025-01-02T15:43:09,487 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 10: Transition #1. Is it enabled?
+2025-01-02T15:43:09,510 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - Step 10: Transition #1 is enabled
+2025-01-02T15:43:09,511 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 10: Checking 1 state invariants
+2025-01-02T15:43:09,511 [zio-default-async-5] DEBUG a.f.a.t.b.SeqModelChecker - State 10: Checking state invariant 0
+2025-01-02T15:43:11,424 [zio-default-async-5] INFO  a.f.a.t.b.SeqModelChecker - State 10: state invariant 0 holds.
+2025-01-02T15:43:11,430 [zio-default-async-5] INFO  a.f.a.t.b.t.TransitionExecutorImpl - Step 10: picking a transition out of 2 transition(s)
+2025-01-02T15:43:11,441 [zio-default-async-5] DEBUG a.f.a.t.b.s.Z3SolverContext - Disposing Z3 solver context 0
+2025-01-02T15:43:11,461 [zio-default-async-5] INFO  a.f.a.t.b.p.BoundedCheckerPassImpl - The outcome is: NoError
+2025-01-02T15:43:11,461 [zio-default-async-5] DEBUG a.f.a.i.p.PassChainExecutor$ - PASS #13: BoundedChecker [OK]
