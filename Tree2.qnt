@@ -3,7 +3,7 @@ module Tree2{
     const FNodes: Set[int]
     const Quorums: Set[Set[str]]
 
-    def Nodes: Set[int] = union(CNodes, FNodes)
+    def Nodes: Set[(int, int)] = union(CNodes, FNodes)
     
     assume QuorumAssumption = and {
         Quorums.forall(Q => Q.subseteq(Nodes)),
@@ -12,22 +12,36 @@ module Tree2{
         Quorums.contains(Nodes)
     }
 
-    var votes: str -> Set[(int, int)]
-    var lock: str -> str
-    var max: str -> int
+    // assume QuoraAssumptions = 
+    // Quorums.forall(Q => Q.subseteq(Nodes))
+    // and Quorums.forall(Q1 => 
+    //     Quorums.exists(Q2 => 
+    //         CNodes.exists(n => n.in(Q1.intersect(Q2)))
+    //     )
+    // )
+    // and Quorums.forall(Q => 
+    //     Nodes.powerset().forall(S => (Q.subseteq(S).implies(S.in(Quorums))))
+    // )
+    // and Nodes.in(Quorums)
+
+    var Vote: Block -> Set[(int, int)]
+    var Lock: int -> Block
+    var Max: int -> int
 
     type Block = str        
     const gen : Block             
 
     var Round: Block -> int               
-    var Parent: Block -> Block   
-    var Vote: Block -> int           
+    var Parent: Block -> Block            
 
     def Rounds: Set[int] = union(Nat, Set(-1))
 
     action init = all {
         Round' = Map(gen -> 0),
-        Parent' = Map(gen -> gen)
+        Parent' = Map(gen -> gen),
+        Lock' = Map(Nodes -> gen),
+        Max' = Map(Nodes -> 0),
+        Vote' = Map(gen -> Nodes.powerset() != gen)
     }
 
     action AddBlock(b: Block ,p: Block,r: int): bool = all{
@@ -39,4 +53,5 @@ module Tree2{
         Round' = Round.set(b,r),
         Vote' = Vote.set(b, v)
     }
+
 }
