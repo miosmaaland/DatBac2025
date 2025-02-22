@@ -3,14 +3,15 @@ module Tree2{
     const FNodes: Set[int]
     const Quorums: Set[Set[str]]
 
-    def Nodes: Set[(int, int)] = union(CNodes, FNodes)
+    def Nodes: Set[int] = union(CNodes, FNodes)
+    type Node = int
     
-    assume QuorumAssumption = and {
-        Quorums.forall(Q => Q.subseteq(Nodes)),
-        tuples(Quorums, Quorums).forall(((Q1, Q2)) => CNodes.exists(n => Q1.intersect(Q2).contains(n))),
-        Quorums.forall(Q => Nodes.powerset().forall(S => (Q.subseteq(S) => Quorums.contains(S)))),
-        Quorums.contains(Nodes)
-    }
+    // assume QuorumAssumption = and {
+    //     Quorums.forall(Q => Q.subseteq(Nodes)),
+    //     tuples(Quorums, Quorums).forall(((Q1, Q2)) => CNodes.exists(n => Q1.intersect(Q2).contains(n))),
+    //     Quorums.forall(Q => Nodes.powerset().forall(S => (Q.subseteq(S) => Quorums.contains(S)))),
+    //     Quorums.contains(Nodes)
+    // }
 
     // assume QuoraAssumptions = 
     // Quorums.forall(Q => Q.subseteq(Nodes))
@@ -24,9 +25,9 @@ module Tree2{
     // )
     // and Nodes.in(Quorums)
 
-    var Vote: Block -> Set[(int, int)]
-    var Lock: int -> Block
-    var Max: int -> int
+    var Vote: Block -> Set[Node]
+    var Lock:  Node -> Block
+    var Max: Node -> int
 
     type Block = str        
     const gen : Block             
@@ -41,17 +42,33 @@ module Tree2{
         Parent' = Map(gen -> gen),
         Lock' = Map(Nodes -> gen),
         Max' = Map(Nodes -> 0),
-        Vote' = Map(gen -> Nodes.powerset() != gen)
+        Vote' = Map(gen -> Nodes)
     }
 
-    action AddBlock(b: Block ,p: Block,r: int): bool = all{
+    action AddBlock(b: Block ,p: Block,r: int): bool = all {
         Round' = Round.set(b, r),
         Parent' = Parent.set(b, p)
     }
 
-    action VoteBlock(b: Block, v: Block, r: int): bool = all {
-        Round' = Round.set(b,r),
+    action VoteBlock(b: Block, v: Node, r: int): bool = all {
+        Round' = Round.set(b, r),
         Vote' = Vote.set(b, v)
     }
 
+    action Proposed(b : Block): bool = all {
+        b.exists(b => Round.contains(b) != -1)
+    }
+
+    action Confirmed(b: Block): bool = all {
+        Proposed(b).exists(b => Quorums.contains(Vote(b)))
+    }
+
+    action propose(b: Block, p: Block, r: int): bool = all {
+        Round' = Round.exclude(b != r),
+        Parent' = Parent.exclude(p != b)
+    }
+
+    action Propose(b: Block, p: Block, r: int): bool = all {
+        
+    }
 }
