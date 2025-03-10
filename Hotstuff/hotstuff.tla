@@ -31,7 +31,7 @@ VARIABLE votes, lock, max
 
 vars == <<round, parent, votes, lock, max>>
 
-TypeOK == /\ round \in [Blocks -> Rounds]
+TypeOK == /\ round \in [Blocks -> Rounds] 
           /\ parent \in [Blocks -> Blocks]
           /\ votes \in [Blocks -> SUBSET Nodes]
           /\ lock \in [Nodes -> Blocks]
