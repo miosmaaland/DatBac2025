@@ -35,7 +35,7 @@ action addBlock(new, par, rounds) = all{
 
     action step = all {
     blocks' = blocks.union(Set(newBlock)),
-    parent' = ,
+    // Trenger parent
     round' = round,
     nextId' = nextId + 1
   }
