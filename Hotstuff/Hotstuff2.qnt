@@ -38,6 +38,8 @@ action addBlock(new, par, rounds) = all{
   action propose = all {
    
     blocks' = blocks.union(Set(newBlock)), 
+
+    //Trenger parent her 
     nextId' = nextId + 1, 
     round' = round + 1, 
     lastId' = newBlock.id 
