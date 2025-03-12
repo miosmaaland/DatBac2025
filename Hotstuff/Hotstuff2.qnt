@@ -30,10 +30,19 @@ action addBlock(new, par, rounds) = all{
     blocks' = blocks,
     parent' = parent,
     round' = round
+}
+
+
+    action step = all {
+    blocks' = blocks.union(Set(newBlock)),
+    parent' = ,
+    round' = round,
+    nextId' = nextId + 1
+  }
     
 
 
-}
+
 
   action propose = all {
    
@@ -42,6 +51,10 @@ action addBlock(new, par, rounds) = all{
     round' = round + 1, 
     lastId' = newBlock.id 
   }
+
+
+
+    
 
 
   
