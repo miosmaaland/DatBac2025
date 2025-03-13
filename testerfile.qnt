@@ -23,5 +23,9 @@ module TestModule{
     //     Round' = Map(gen -> 0),
     //     Parent' = Map(gen -> gen),
     }
+    action proposed(b,r) = all{
+        b.in(blocks), 
+        r(b) == -1
+    }
     
     }
