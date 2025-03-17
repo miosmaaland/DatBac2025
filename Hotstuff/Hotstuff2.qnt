@@ -26,21 +26,21 @@ action addBlock(new, par, rounds) = all{
     blocks' = blocks,
     parent' = parent,
     round' = round
+    
 }
+
+
     action step = all {
     blocks' = blocks.union(Set(newBlock)),
     
     round' = round,
     nextId' = nextId + 1
-    }       
+    } 
 
-  
-    
   action propose = all {
    
-    blocks' = blocks.union(Set(newBlock)),
-
-
+    blocks' = blocks.union(Set(newBlock)), 
+    parent' = parent,
     nextId' = nextId + 1, 
     round' = round + 1, 
     lastId' = newBlock.id 
