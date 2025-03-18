@@ -1,9 +1,14 @@
 module Blockchain {
+  type Node = {id : int}
+  
+  
   type Block = { id: int, parentId: int }
 
-  var blocks: Set[Block]
+
+  var nodes : Set[Node]
   var parent: Block -> Block  
   var round: int
+  var blocks : Set[Block]
   var nextId: int
   var lastId: int
 
@@ -22,12 +27,14 @@ module Blockchain {
    
     var parentBlock : int
 
-action addBlock(new, par, rounds) = all{
+
+
+
+
+action addBlock(new, par) = all{
     blocks' = blocks,
-    parent' = parent,
-    round' = round
-    
-}
+    parent' = parent
+    }
 
 
     action step = all {
@@ -37,7 +44,11 @@ action addBlock(new, par, rounds) = all{
     nextId' = nextId + 1
     } 
 
-  action propose = all {
+  
+
+    
+
+  action propose(b,p,r) = all {
    
     blocks' = blocks.union(Set(newBlock)), 
     parent' = parent,
