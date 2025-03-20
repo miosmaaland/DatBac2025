@@ -2,8 +2,9 @@ module Blockchain {
   type Node = {id : int}
   
   
-  type Block = { id: int, parentId: int }
+  type Block = { rounds: int, parentId: int }
 
+  var rounds : Block -> round
 
   var nodes : Set[Node]
   var parent: Block -> Block  
@@ -11,8 +12,12 @@ module Blockchain {
   var blocks : Set[Block]
   var nextId: int
   var lastId: int
+  
 
-  val gen: Block = { id: 0, parentId: 0 }
+  
+
+  val gen: Block = { rounds: 0, parentId: 0 }
+
 
   action init = all {
     blocks' = Set(gen),
@@ -22,7 +27,7 @@ module Blockchain {
     lastId' = 0
   }
 
-    val newBlock = { id: nextId, parentId: lastId }
+    val newBlock = { rounds: nextId, parentId: lastId }
 
    
     var parentBlock : int
@@ -44,9 +49,9 @@ action addBlock(new, par) = all{
     nextId' = nextId + 1
     } 
 
-  
-
-    
+  action proposed(b) = {
+    b.in(blocks.contains(rounds != -1))
+  }   
 
   action propose(b,p,r) = all {
    
@@ -54,6 +59,6 @@ action addBlock(new, par) = all{
     parent' = parent,
     nextId' = nextId + 1, 
     round' = round + 1, 
-    lastId' = newBlock.id 
+    lastId' = newBlock.rounds 
   }
 }
