@@ -29,8 +29,8 @@ def getRounds(b) = {
 
 
 action addBlock(new, par) = all{
-    blocks' = blocks,
-    parent' = parent,   
+    blocks' = blocks.union(Set(new)),
+    parent' = parent.put(new, par),   
     }
 
     action step = all {
