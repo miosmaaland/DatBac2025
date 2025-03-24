@@ -1,54 +1,41 @@
 module Blockchain2 {
-  type Block = { id: int, parentId: int }
+  
+  
+  type Block = { round: int}
 
-  var blocks: Set[Block]
+  val natNumbers = Nat.union(Set(-1))
+  var rounds : Block -> round
+
   var parent: Block -> Block  
-  var round: int
-  var nextId: int
-  var lastId: int
+  var blocks : Set[Block]
+  var round: natNumbers
 
-  val gen: Block = { id: 0, parentId: 0 }
+  val newBlock = { round}
+
+  
+  val gen: Block = { round: 0}
+
 
   action init = all {
     blocks' = Set(gen),
     parent' = Map(gen -> gen),
     round' = 0,
-    nextId' = 1,
-    lastId' = 0
   }
 
-    val newBlock = { id: nextId, parentId: lastId }
-
-   
-    var parentBlock : int
-
-action addBlock(new, par, rounds) = all{
-    blocks' = blocks,
-    parent' = parent,
-    round' = round
-    
+def getRounds(b) = {
+  b.round
 }
 
 
+
+action addBlock(new, par) = all{
+    blocks' = blocks,
+    parent' = parent,   
+    }
+
     action step = all {
-    blocks' = blocks.union(Set(newBlock)),
-    
-    round' = round,
-    nextId' = nextId + 1
+    blocks' = blocks.union(Set(newBlock)),   
+    round' = round.union(Set(getRounds(newBlock.parent) + 1)),
     } 
 
-  action propose = all {
-   
-    blocks' = blocks.union(Set(newBlock)), 
-    parent' = parent,
-    nextId' = nextId + 1, 
-    round' = round + 1, 
-    lastId' = newBlock.id 
-  }
-
-  action Vote(n,b) = all {
-    propose(b),
-    n.in(nodes),
-    round[b] <= max[n],
-  }
 }
