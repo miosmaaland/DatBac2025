@@ -13,7 +13,7 @@ module Blockchain {
   var lock : Node -> Block
   var max : Node -> int
        
-  
+
 
   val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
@@ -27,11 +27,6 @@ module Blockchain {
 
   val newBlock = { id: nextId, rounds: nextId, parentId: lastId }
 
-  action addBlock(new, par, rou) = all {
-    blocks' = blocks.union(Set(new)),
-    parent' = parent.put(new, par),
-    round' = round + 1
-  }
 
   action step = all {
     blocks' = blocks.union(Set(newBlock)),
@@ -43,11 +38,16 @@ module Blockchain {
     b.get(round != -1)
   }   
 
-  action propose(b, p, r) = all {
+  action addBlock(b, p, r) = all {
     blocks' = blocks.union(Set(newBlock)), 
     parent' = parent.put(newBlock, p),
     nextId' = nextId + 1, 
     round' = newBlock.id, 
     lastId' = newBlock.id 
   }
+
+  def getRounds(b) = {
+    
+  b.round
+}
 }
