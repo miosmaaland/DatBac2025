@@ -1,10 +1,7 @@
 module Blockchain {
-  type Node = {id : int}
+  type Node = { id: int }
   
-  
-  type Block = { rounds: int, parentId: int }
-
-  var rounds : Block -> round
+  type Block = { id: int, rounds: int, parentId: int }
 
   var nodes : Set[Node]
   var parent: Block -> Block  
@@ -12,12 +9,13 @@ module Blockchain {
   var blocks : Set[Block]
   var nextId: int
   var lastId: int
+  var votes: Block -> nodes
+  var lock : Node -> Block
+  var max : Node -> int
+       
   
 
-  
-
-  val gen: Block = { rounds: 0, parentId: 0 }
-
+  val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
   action init = all {
     blocks' = Set(gen),
@@ -27,38 +25,29 @@ module Blockchain {
     lastId' = 0
   }
 
-    val newBlock = { rounds: nextId, parentId: lastId }
+  val newBlock = { id: nextId, rounds: nextId, parentId: lastId }
 
-   
-    var parentBlock : int
+  action addBlock(new, par, rou) = all {
+    blocks' = blocks.union(Set(new)),
+    parent' = parent.put(new, par),
+    round' = round + 1
+  }
 
-
-
-
-
-action addBlock(new, par) = all{
-    blocks' = blocks,
-    parent' = parent
-    }
-
-
-    action step = all {
+  action step = all {
     blocks' = blocks.union(Set(newBlock)),
-    
-    round' = round,
+    round' = newBlock.id, 
     nextId' = nextId + 1
-    } 
+  } 
 
   action proposed(b) = {
-    b.in(blocks.contains(rounds != -1))
+    b.get(round != -1)
   }   
 
-  action propose(b,p,r) = all {
-   
+  action propose(b, p, r) = all {
     blocks' = blocks.union(Set(newBlock)), 
-    parent' = parent,
+    parent' = parent.put(newBlock, p),
     nextId' = nextId + 1, 
-    round' = round + 1, 
-    lastId' = newBlock.rounds 
+    round' = newBlock.id, 
+    lastId' = newBlock.id 
   }
 }
