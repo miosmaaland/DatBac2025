@@ -1,4 +1,4 @@
-module Blockchain {
+module Blockchains {
   type Node = { id: int }
   
   type Block = { id: int, rounds: int, parentId: int }
@@ -9,6 +9,11 @@ module Blockchain {
   var blocks : Set[Block]
   var nextId: int
   var lastId: int
+  var votes: Block -> nodes
+  var lock : Node -> Block
+  var max : Node -> int
+       
+
 
   val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
@@ -20,31 +25,33 @@ module Blockchain {
     lastId' = 0
   }
 
-  val newBlock = { id: nextId, rounds: nextId, parentId: lastId }
+  val newBlock : Block = { id: nextId, rounds: nextId, parentId: lastId }
 
+  action addBlock(newBlock) = all {
 
+    
 
-
-
-
-/*
-  action addBlock(new, par, rou) = all {
-    blocks' = blocks.union(Set(new)),
-    parent' = parent.put(new, par),
+    
+    blocks' = blocks.union(Set(newBlock)),
     round' = round + 1
   }
 
-  */
 
-  action step = all {
-    blocks' = blocks.union(Set(newBlock)),
-    round' = newBlock.id, 
+
+//
+  /*
+ 
+ action step = all {
+ blocks' = blocks.union(Set(newBlock)),
+  round' = newBlock.id, 
     nextId' = nextId + 1
   } 
 
   action proposed(b) = {
     b.get(round != -1)
   }   
+
+
 
   action propose(b, p, r) = all {
     blocks' = blocks.union(Set(newBlock)), 
@@ -53,4 +60,11 @@ module Blockchain {
     round' = newBlock.id, 
     lastId' = newBlock.id 
   }
+
+  def getRounds(b) = {
+    
+  b.round
+}
+
+*/
 }
