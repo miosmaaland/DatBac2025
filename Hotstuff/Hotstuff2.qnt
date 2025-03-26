@@ -6,7 +6,7 @@ module Blockchain {
   var nodes : Set[Node]
   var parent: Block -> Block  
   var round: int
-  var blocks : Set[Block]
+  var blocks : id -> Block
   var nextId: int
   var lastId: int
   var votes: Block -> nodes
@@ -18,7 +18,7 @@ module Blockchain {
   val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
   action init = all {
-    blocks' = Set(gen),
+    blocks' = Map(0 -> gen),
     parent' = Map(gen -> gen),
     round' = 0,
     nextId' = 1,
@@ -29,7 +29,7 @@ module Blockchain {
 
 
   action step = all {
-    blocks' = blocks.union(Set(newBlock)),
+    blocks' = blocks.put(nextId,newBlock),
     round' = newBlock.id, 
     nextId' = nextId + 1
   } 
@@ -39,10 +39,11 @@ module Blockchain {
   }   
 
   action addBlock(b, p, r) = all {
-    blocks' = blocks.union(Set(newBlock)), 
-    parent' = parent.put(newBlock, p),
+    blocks' = blocks.put(nextId,newBlock), 
+    parent' = p.id,
     nextId' = nextId + 1, 
-    round' = newBlock.id, 
+    round' = r, 
+    r > p.rounds,
     lastId' = newBlock.id 
   }
 
