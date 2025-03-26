@@ -4,10 +4,11 @@ module Blockchain {
   type Block = { id: int, rounds: int, parentId: int }
 
   var nodes : Set[Node]
-  var parent: Block -> Block  
+  var parent: Set[lastId -> Block]  
   var round: int
-  var blocks : id -> Block
+  var blocks : Set[int -> Block]
   var nextId: int
+  var roundId: int
   var lastId: int
   var votes: Block -> nodes
   var lock : Node -> Block
@@ -18,18 +19,19 @@ module Blockchain {
   val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
   action init = all {
-    blocks' = Map(0 -> gen),
-    parent' = Map(gen -> gen),
+    blocks' = Set(Map(0 -> gen)),
+    parent' = Set(Map(gen -> gen)),
     round' = 0,
-    nextId' = 1,
-    lastId' = 0
+    nextId' = 0,
+    lastId' = 0,
+    roundId' = 0
   }
 
-  val newBlock = { id: nextId, rounds: nextId, parentId: lastId }
+  val newBlock: Block = { id: nextId, rounds: roundId, parentId: lastId }
 
 
   action step = all {
-    blocks' = blocks.put(nextId,newBlock),
+    blocks' = blocks.union(Set(Map(nextId -> newBlock))),
     round' = newBlock.id, 
     nextId' = nextId + 1
   } 
@@ -38,17 +40,12 @@ module Blockchain {
     b.get(round != -1)
   }   
 
-  action addBlock(b, p, r) = all {
-    blocks' = blocks.put(nextId,newBlock), 
-    parent' = p.id,
-    nextId' = nextId + 1, 
-    round' = r, 
-    r > p.rounds,
-    lastId' = newBlock.id 
+  action addBlock(b:int, p:int, r:int): bool = all {
+    blocks' = blocks.union(Set(Map(nextId -> newBlock))),
+    parent' = parent.union(Set(Map(lastId -> newBlock))),
+    lastId' = p,
+    nextId' = b, 
+    roundId' = r,  
   }
 
-  def getRounds(b) = {
-    
-  b.round
-}
 }
