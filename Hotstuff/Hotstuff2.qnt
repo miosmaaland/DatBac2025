@@ -1,4 +1,7 @@
 module Blockchain {
+  
+  
+  
   type Node = { id: int }
   
   type Block = { id: int, rounds: int, parentId: int }
@@ -6,11 +9,11 @@ module Blockchain {
   var nodes : Set[Node]
   var parent: Set[lastId -> Block]  
   var round: int
-  var blocks : Set[int -> Block]
+  var blocks : Set[id -> Block]
   var nextId: int
   var roundId: int
   var lastId: int
-  var votes: Block -> nodes
+  var votes: str -> Set[(int, int)]
   var lock : Node -> Block
   var max : Node -> int
        
@@ -24,7 +27,8 @@ module Blockchain {
     round' = 0,
     nextId' = 0,
     lastId' = 0,
-    roundId' = 0
+    roundId' = 0,
+    nodes' = Set()
   }
 
   val newBlock: Block = { id: nextId, rounds: roundId, parentId: lastId }
@@ -40,12 +44,29 @@ module Blockchain {
     b.get(round != -1)
   }   
 
-  action addBlock(b:int, p:int, r:int): bool = all {
+
+  
+
+  action addBlock(b:int, p : int,r : int) : bool = all {
     blocks' = blocks.union(Set(Map(nextId -> newBlock))),
     parent' = parent.union(Set(Map(lastId -> newBlock))),
-    lastId' = p,
-    nextId' = b, 
-    roundId' = r,  
+    nextId' = b+0, 
+    lastId' = p+0,
+    roundId' = r+0,  
   }
 
+
+
+
+const first_node : int
+const second_node : int
+const third_node : int
+const faulty_node : int
+
+
+
+
+const voting_nodes : Set[(first_node,second_node,third_node,faulty_node)]
+
+    
 }
