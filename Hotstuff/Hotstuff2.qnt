@@ -28,7 +28,8 @@ module Blockchain {
     round' = 0,
     nextId' = 0,
     lastId' = 0,
-    roundId' = 0
+    roundId' = 0,
+    nodes' = Set()
   }
 
   val newBlock: Block = { id: nextId, rounds: roundId, parentId: lastId }
@@ -58,4 +59,18 @@ module Blockchain {
     p == newBlock.id,
   }
 
+
+
+
+const first_node : int
+const second_node : int
+const third_node : int
+const faulty_node : int
+
+
+
+
+const voting_nodes : Set[(first_node,second_node,third_node,faulty_node)]
+
+    
 }
