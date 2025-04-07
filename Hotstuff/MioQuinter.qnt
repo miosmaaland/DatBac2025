@@ -1,84 +1,133 @@
-module Blockchain {
-  const first_node: int
-  const second_node: int
-  const third_node: int
-  const faulty_node: int
+module hotstuff {
+  // Type definitions
+  type Node = int
+  type Block = int
+  type Round = int
+
   
-  type Block = { id: int, rounds: int, parentId: int }
+  val block : Block
+  val node : Node
+  // Constants
+  const CNodes: Set[Node]
+  const FNodes: Set[Node]
+  const Quorums: Set[Set[Node]]
 
-  var nodes: Set[(first_node,second_node,third_node,faulty_node)]
-  var correct_nodes: Set[(first_node, second_node, third_node)]
-  var parent: Set[(int, Block)]  
-  var round: int
-  var blocks: Set[Block]
-  var nextId: int
-  var roundId: int
-  var lastId: int
-  var votes: (int, int) -> Set[int]  
-  var lock: int -> Block             
-  var max: int -> int                 
+  // Derived sets
+  val Nodes = CNodes.union(FNodes)
+  
 
-  val gen: Block = { id: 0, rounds: 0, parentId: 0 }
+  // Variables
+  var round: Block -> Round
+  var parent: Block -> Block
+  var votes: Block -> Set[Node]
+  var lock: Node -> Block
+  var max: Node -> Round
 
+  // Genesis block
+  val gen: Block = 0
+
+  // Quorum assumptions
+  val QuorumAssumption =
+    // All quorums are subsets of Nodes
+    Quorums.forall(Q => Q.subseteq(Nodes)) and
+    // Any two quorums intersect in a correct node
+    Quorums.forall(Q1 =>
+      Quorums.forall(Q2 =>
+        CNodes.exists(n => Q1.contains(n) and Q2.contains(n))
+      )
+    ) and
+    // Quorums are subset-closed
+    Quorums.forall(Q =>
+      Set[Node].forall(S =>
+        Q.subsetOf(S) implies Quorum.has(S)
+      )
+    ) and
+    // The set of all nodes is a quorum
+    Quorum.has(Nodes)
+
+  // Type invariant
+  val TypeOK =
+    round.in(block -> round) and
+    parent.in(block -> block) and
+    votes.in(block -> Nodes) and
+    lock.in(node -> block) and
+    max.in(node -> round)
+
+  // Initial state
   action init = all {
-    blocks' = Set({gen}),
-    parent' = Set({(0, gen)}),
-    round' = 0,
-    nextId' = 1,
-    lastId' = 0,
-    roundId' = 0,
-    votes' = Map(),
-    lock' = Map(),
-    max' = Map()
+    // All nodes have genesis locked
+    lock' = Map.fromSet(Nodes, _ => gen),
+    // All nodes have max round 0
+    max' = Map.fromSet(Nodes, _ => 0),
+    // All blocks except genesis have round -1
+    round' = Map.fromSet(Block, b => if b == gen then 0 else -1),
+    // All blocks are their own parent initially
+    parent' = Map.fromSet(Block, b => b),
+    // Only genesis has votes (from all nodes)
+    votes' = Map.fromSet(Block, b => if b == gen then Nodes else Set())
   }
 
-  action voteForBlock(b: Block) = any {
-    val voter = oneOf(correct_nodes)
-    val currentVotes = votes.getOrDefault((b.id, b.rounds), Set())
-    votes' = votes.put((b.id, b.rounds), currentVotes.add(voter))
-    
-    // If majority of correct nodes voted for this block, add it to blocks
-    if (currentVotes.add(voter).size() >= 2) {
-      blocks' = blocks.add(b),
-      lastId' = b.id,
-      roundId' = b.rounds
-    } else {
-      blocks' = blocks
-    },
-    
-    // Other variables remain unchanged unless specified
-    parent' = parent,
-    round' = round,
-    nextId' = nextId,
+  // Predicates
+  def proposed(b) = b.in(Block) and round.get(b) != -1
+
+  def confirmed(b) = proposed(b) and Quorums.exists(Q => votes.get(b) == Q)
+
+  // Propose action
+  action propose(b, p, r) = {
+    require(
+      b.in(Block) and
+      not(proposed(b)) and
+      confirmed(p) and
+      r > round.get(p)
+    ),
+    round' = round.set(b, r),
+    parent' = parent.set(b, p),
+    // All other variables unchanged
+    votes' = votes,
     lock' = lock,
     max' = max
   }
 
-  action proposeBlock = {
-    val newBlock: Block = { id: nextId, rounds: roundId + 1, parentId: lastId }
-    
-    // First add the block to consideration
-    blocks' = blocks.add(newBlock),
-    nextId' = nextId + 1,
-    roundId' = roundId + 1,
-    
-    // Then nodes can vote on it
-    voteForBlock(newBlock)
+  // Vote action
+  action vote(n, b) = {
+    require(
+      proposed(b) and
+      n.in(Nodes) and
+      (
+        not(n.in(CNodes)) or
+        (round.get(b) > max.get(n) and round.get(lock.get(n)) <= round.get(parent.get(b)))
+      )
+    ),
+    max' = max.set(n, round.get(b)),
+    votes' = votes.set(b, votes.get(b).union(Set(n))),
+    lock' = 
+      if round.get(parent.get(parent.get(b))) > round.get(lock.get(n)) then
+        lock.set(n, parent.get(parent.get(b)))
+      else
+        lock,
+    // Round and parent unchanged
+    round' = round,
+    parent' = parent
   }
 
-  action step = all {
-    val newBlock = { id: nextId, rounds: roundId, parentId: lastId }
-    blocks' = blocks.add(newBlock),
-    round' = newBlock.id, 
-    nextId' = nextId + 1
-  } 
+  // Next state relation
+  action Next =
+    any {
+      // Either propose a new block
+      Block.exists(b =>
+        Block.exists(p =>
+          Round.exists(r =>
+            propose(b, p, r)
+        )
+      ),
+      // Or vote for a block
+      Block.exists(b =>
+        Nodes.exists(n =>
+          vote(n, b)
+        )
+      )
+    }
 
-  action addBlock(b: int, p: int, r: int) = all {
-    val newBlock = { id: b, rounds: r, parentId: p }
-    blocks' = blocks.add(newBlock),
-    parent' = parent.add((p, newBlock)),
-    nextId' = b + 1, 
-    lastId' = p + 0,
-    roundId' = r + 0 
-  }
+  // Temporal specification
+  temporal Spec = init and always(Next or unchanged(round, parent, votes, lock, max))
 }
