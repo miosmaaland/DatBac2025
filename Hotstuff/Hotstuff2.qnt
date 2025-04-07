@@ -1,23 +1,29 @@
 module Blockchain {
   type Node = { nodeId: int }
+  val first_node : Node = {nodeId: 1}
+  val second_node: Node = {nodeId: 2}
+  val third_node: Node = {nodeId: 3}
+  val faulty_node: Node = {nodeId: 4}
   
   type Block = { id: int, rounds: int, parentId: int }
 
-  var nodes : Set[Node]
   var parent: int -> Block
   var round: int
   var blocks : Block
   var nextId: int
   var roundId: int
   var lastId: int
+  var voteId: int
   var blockers: Set[newBlock]
   var parents: Set[int -> Block]
   var votes: Block -> nodes
   var lock : Node -> Block
   var max : Node -> int
+  var nodes: Set[Node]
+  var correct_nodes: Set[Node]
        
 
-
+  val votingNode: Node = {nodeId: voteId}
   val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
   action init = all {
@@ -27,9 +33,12 @@ module Blockchain {
     parents' = Set(Map(0 -> gen)),
     round' = 0,
     nextId' = 0,
+    voteId' = 1,
     lastId' = 0,
     roundId' = 0,
-    // nodes' = Set()
+    nodes' = Set(first_node,second_node,third_node,faulty_node),
+    correct_nodes' = Set(first_node, second_node, third_node),
+    max' = Map(first_node -> 0),
   }
 
   val newBlock: Block = { id: nextId, rounds: roundId, parentId: lastId }
@@ -45,9 +54,14 @@ module Blockchain {
     b.get(round != -1)
   }   
 
-  
+  def getID(b) =  {
+    blockers.filter(x=> x.id == b)
+  }
+   def getNode(n) = {
+     nodes.filter(x => x.nodeId == n)
+   }
 
-  action addBlock(b, p, r) = all {
+  action addBlock(b, p, r, n) = all {
     parent' = Map(lastId -> newBlock),
     blockers' = blockers.union(Set(newBlock)),
     parents' = parents.union(Set(Map(lastId -> newBlock))),
@@ -55,16 +69,17 @@ module Blockchain {
     lastId' = p,
     nextId' = b, 
     roundId' = r, 
+    voteId' = n,
+    n != 4,
     r > newBlock.rounds,
-  }
+    p == newBlock.id,
+    max' = Map(votingNode -> r),
+
+// blockers.filter(b=>b.id = x)
 
 
 
 
-// const first_node : int
-// const second_node : int
-// const third_node : int
-// const faulty_node : int
 
 
 
@@ -72,4 +87,5 @@ module Blockchain {
 // const voting_nodes : Set[(first_node,second_node,third_node,faulty_node)]
 
     
+}
 }
