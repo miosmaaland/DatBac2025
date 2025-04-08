@@ -16,11 +16,11 @@ module Blockchain {
   var voteId: int
   var blockers: Set[newBlock]
   var parents: Set[int -> Block]
-  var votes: Block -> nodes
   var lock : Node -> Block
-  var max : Node -> int
+  var max : nodes -> round
   var nodes: Set[Node]
   var correct_nodes: Set[Node]
+  var votes: Block -> Set[Node]
        
 
   val votingNode: Node = {nodeId: voteId}
@@ -38,11 +38,45 @@ module Blockchain {
     roundId' = 0,
     nodes' = Set(first_node,second_node,third_node,faulty_node),
     correct_nodes' = Set(first_node, second_node, third_node),
-    max' = Map(first_node -> 0),
+    max' = Map(Set(first_node,second_node,third_node,faulty_node) -> 0),
+    votes' = Map(gen -> Set(first_node, second_node, third_node)),
+  }
+  
+  val newBlock: Block = { id: nextId, rounds: roundId, parentId: lastId }
+  // val currentVotes: Block = {id:nextId, rounds: roundId, parentId: lastId}
+
+  // action voteForBlock(b: Block):bool = any {
+  //  def votingNode = oneOf(correct_nodes),
+  //  val currentVotes = votes.get(Set(b.id), Set(votingNode)),
+  //   votes' = Map((b.id, b.rounds) -> currentVotes.put(voter)),
+    
+    // If majority of correct nodes voted for this block, add it to blocks
+    // if (currentVotes.add(voter).size() >= 2) {
+    //   blocks' = blocks.add(b),
+    //   lastId' = b.id,
+    //   roundId' = b.rounds
+    // } else {
+    //   blocks' = blocks
+    // },
+    
+    // // Other variables remain unchanged unless specified
+    // parent' = parent,
+    // round' = round,
+    // nextId' = nextId,
+    // lock' = lock,
+    // max' = max
+  // }
+
+  action Vote(b: int,p: int,r:int,n:Node):bool = all{
+    n.in(correct_nodes),
+    vote(b,p,r,n),
   }
 
-  val newBlock: Block = { id: nextId, rounds: roundId, parentId: lastId }
-
+  action vote(b: int,p: int,r:int,n:Node):bool = all {
+    max' = Map(nodes -> r),
+    votes' = Map(newBlock -> Set(n)),
+    addBlock(b, p, r)   
+  }
 
   action step = all {
     blocks' = newBlock,
@@ -61,7 +95,7 @@ module Blockchain {
      nodes.filter(x => x.nodeId == n)
    }
 
-  action addBlock(b, p, r, n) = all {
+  action addBlock(b, p, r) = all {
     parent' = Map(lastId -> newBlock),
     blockers' = blockers.union(Set(newBlock)),
     parents' = parents.union(Set(Map(lastId -> newBlock))),
@@ -69,12 +103,9 @@ module Blockchain {
     lastId' = p,
     nextId' = b, 
     roundId' = r, 
-    voteId' = n,
-    n != 4,
     r > newBlock.rounds,
     p == newBlock.id,
-    max' = Map(votingNode -> r),
-
+  }
 // blockers.filter(b=>b.id = x)
 
 
@@ -87,5 +118,6 @@ module Blockchain {
 // const voting_nodes : Set[(first_node,second_node,third_node,faulty_node)]
 
     
-}
+
+
 }

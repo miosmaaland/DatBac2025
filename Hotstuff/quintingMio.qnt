@@ -8,6 +8,7 @@ module hotstuff {
   pure val CNodes: Set[Node]      // correct nodes
   pure val FNodes: Set[Node]      // faulty nodes
   pure val Nodes: Set[Node] = CNodes.union(FNodes)
+  pure val Blocks: Set[Block]
   
   // Quorums
   type Quorum = Set[Node]
@@ -69,7 +70,7 @@ module hotstuff {
   // Propose a new block
   action propose(b: Block, p: Block, r: Round) : bool = {
     // Requirements
-    Blocks.contains(b),
+    Blocks.contains(b)
     require(not proposed(b));
     require(confirmed(p));
     require(r > round.get(p, -1));
