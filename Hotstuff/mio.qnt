@@ -1,150 +1,117 @@
-module botstuff {
-  // Types and constants
-  type Node
-  type Block
+module hotstuff {
+  // Import necessary modules
+  import Quint.*
+  import Set.*
+  import Map.*
+
+  // Constants: correct nodes, faulty nodes, and quorums
+  const CNodes: Set[int]
+  const FNodes: Set[int]
+  const Quorums: Set[Set[int]]
+
+  // Derived sets
+  val Nodes = CNodes.union(FNodes)
+
+  // Quorum assumption
+  val QuorumAssumption =
+    // All quorums are subsets of Nodes
+    Quorums.forall(Q => Q.subsetOf(Nodes)) &&
+    // Any two quorums intersect in a correct node
+    Quorums.forall(Q1 =>
+      Quorums.forall(Q2 =>
+        CNodes.exists(n => Q1.has(n) && Q2.has(n)))) &&
+    // Quorums are subset-closed
+    Quorums.forall(Q =>
+      Set(Nodes).forall(S =>
+        Q.subsetOf(S) => Quorums.has(S)))) &&
+    // The set of all nodes is a quorum
+    Quorums.has(Nodes)
+
+  // Assume the quorum properties hold
+  assume(QuorumAssumption)
+
+  // Type definitions
+  type Block = int
   type Round = int
-  
-  // Sets of nodes
-  pure val CNodes: Set[Node]      // correct nodes
-  pure val FNodes: Set[Node]      // faulty nodes
-  pure val Nodes: Set[Node] = CNodes.union(FNodes)
-  
-  // Set of blocks
-  pure val Blocks: Set[Block]     // all possible blocks
-  
-  // Rounds range
-  pure val Rounds: Set[int]       // valid rounds
-  
-  // Quorums
-  type Quorum = Set[Node]
-  pure val Quorums: Set[Quorum]
-  
-  // Quorum assumptions - represented as assertions
-  // We'll add them as invariants to check
-  val quorumAssumption1 = Quorums.forall(Q => Q.subseteq(Nodes))
-  val quorumAssumption2 = Quorums.forall(Q1 => 
-    Quorums.forall(Q2 => 
-      CNodes.exists(n => Q1.contains(n) and Q2.contains(n))
-    )
-  )
-  val quorumAssumption3 = Quorums.forall(Q => 
-    Nodes.powerset().forall(S => 
-      (Q.subseteq(S) and S.subseteq(Nodes)) implies Quorums.contains(S)
-    )
-  )
-  val quorumAssumption4 = Quorums.contains(Nodes)
-  
-  // Special genesis block
-  pure val gen: Block
-  assume { Blocks.contains(gen) }
-  
+  const gen: Block // Genesis block
+
   // State variables
-  var round: Block -> Round = Map()     // round of each block
-  var parent: Block -> Block = Map()    // parent of each block
-  var votes: Block -> Set[Node] = Map() // votes for each block
-  var lock: Node -> Block = Map()       // locked block for each node
-  var max: Node -> Round = Map()        // max signed round for each node
-  
-  // Helper functions
-  def proposed(b: Block): bool = {
-    round.getOrElse(b, -1) != -1
+  var round: Block -> Round
+  var parent: Block -> Block
+  var votes: Block -> Set[int] // Set of nodes that voted for each block
+  var lock: int -> Block       // Each node's locked block
+  var max: int -> Round        // Each node's max round
+
+  // State tuple for UNCHANGED expressions
+  val vars = <<round, parent, votes, lock, max>>
+
+  // Type invariant
+  val TypeOK =
+    round.in(Set(Block).all(b => round.get(b).in(Set(Round))) &&
+    parent.in(Set(Block).all(b => parent.get(b).in(Set(Block)))) &&
+    votes.in(Set(Block).all(b => votes.get(b).subsetOf(Nodes))) &&
+    lock.in(Set(Nodes).all(n => lock.get(n).in(Set(Block)))) &&
+    max.in(Set(Nodes).all(n => max.get(n).in(Set(Round))))
+
+  // Initial state
+  val Init =
+    lock == Map(Nodes.map(n => (n, gen))) &&
+    max == Map(Nodes.map(n => (n, 0))) &&
+    round == Map(Set(Block).map(b => (b, -1)).put(gen, 0) &&
+    parent == Map(Set(Block).map(b => (b, b))) &&
+    votes == Map(Set(Block).map(b => (b, Set()))).put(gen, Nodes)
+
+  // Predicates
+  def Proposed(b) = b.in(Set(Block)) && round.get(b) != -1
+
+  def Confirmed(b) = Proposed(b) && Quorums.has(votes.get(b))
+
+  // Actions
+  action propose(b, p, r) = {
+    round' == round.put(b, r),
+    parent' == parent.put(b, p)
   }
-  
-  def confirmed(b: Block): bool = {
-    proposed(b) and Quorums.exists(Q => Q.subseteq(votes.getOrElse(b, Set())))
+
+  action Propose(b, p, r) = {
+    b.in(Set(Block)),
+    !Proposed(b),
+    Confirmed(p),
+    r > round.get(p),
+    propose(b, p, r),
+    unchanged(lock, max, votes)
   }
-  
-  // Initialize state
-  action init = all {
-    // All nodes initially lock on genesis block
-    lock' = Nodes.mapBy(n => gen),
-    
-    // Max round for all nodes is 0
-    max' = Nodes.mapBy(n => 0),
-    
-    // All blocks except genesis have round -1
-    round' = Blocks.mapBy(b => if (b == gen) 0 else -1),
-    
-    // All blocks are their own parent initially
-    parent' = Blocks.mapBy(b => b),
-    
-    // No votes for any block except genesis
-    votes' = Blocks.mapBy(b => if (b == gen) Nodes else Set())
-  }
-  
-  // Propose a new block
-  action propose(b: Block, p: Block, r: Round) = {
-    // Requirements
-    require(Blocks.contains(b));
-    require(not proposed(b));
-    require(confirmed(p));
-    require(r > round.getOrElse(p, -1));
-    
-    // Update state
-    all {
-      round' = round.put(b, r),
-      parent' = parent.put(b, p),
-      unchanged(votes),
-      unchanged(lock),
-      unchanged(max)
+
+  action vote(n, b) = {
+    max' == max.put(n, round.get(b)),
+    votes' == votes.put(b, votes.get(b).union(Set(n))),
+    if (round.get(parent.get(parent.get(b))) > round.get(lock.get(n))) {
+      lock' == lock.put(n, parent.get(parent.get(b)))
+    } else {
+      lock' == lock
     }
   }
-  
-  // Vote for a block
-  action vote(n: Node, b: Block) = {
-    // Requirements
-    require(proposed(b));
-    require(Nodes.contains(n));
-    require(not CNodes.contains(n) or 
-           (round.getOrElse(b, -1) > max.getOrElse(n, 0) and 
-            round.getOrElse(lock.getOrElse(n, gen), -1) <= round.getOrElse(parent.getOrElse(b, gen), -1)));
-    
-    // Get parent and grandparent blocks
-    val p = parent.getOrElse(b, gen);
-    val gp = parent.getOrElse(p, gen);
-    
-    // Determine if lock should be updated
-    val shouldUpdateLock = round.getOrElse(gp, -1) > round.getOrElse(lock.getOrElse(n, gen), -1);
-    
-    // Update state
-    all {
-      max' = max.put(n, round.getOrElse(b, -1)),
-      votes' = votes.put(b, votes.getOrElse(b, Set()).union(Set(n))),
-      lock' = if (shouldUpdateLock) lock.put(n, gp) else lock,
-      unchanged(round),
-      unchanged(parent)
-    }
+
+  action Vote(n, b) = {
+    Proposed(b),
+    n.in(Nodes),
+    (!n.in(CNodes)) || (
+      round.get(b) > max.get(n) &&
+      round.get(lock.get(n)) <= round.get(parent.get(b))
+    ),
+    vote(n, b),
+    unchanged(round, parent)
   }
-  
-  // System transitions
-  action step = {
-    nondet b: Block, p: Block, r: Round do {
-      propose(b, p, r)
-    } or {
-      nondet n: Node, b: Block do {
-        vote(n, b)
-      }
-    }
-  }
-  
-  // Safety properties
-  val typeOK = all {
-    round.forall((b, r) => Blocks.contains(b) and Rounds.contains(r)),
-    parent.forall((b, p) => Blocks.contains(b) and Blocks.contains(p)),
-    votes.forall((b, ns) => Blocks.contains(b) and ns.subseteq(Nodes)),
-    lock.forall((n, b) => Nodes.contains(n) and Blocks.contains(b)),
-    max.forall((n, r) => Nodes.contains(n) and Rounds.contains(r))
-  }
-  
-  // Run the protocol
-  run init then step*
-  
-  // Invariants to check
-  invariant TypeOK = typeOK
-  invariant QuorumAssumptions = all {
-    quorumAssumption1,
-    quorumAssumption2, 
-    quorumAssumption3,
-    quorumAssumption4
-  }
+
+  // Next-state relation
+  val Next =
+    Set(Block).exists(b =>
+      Set(Block).exists(p =>
+        Set(Round).exists(r =>
+          Propose(b, p, r)))) ||
+    Set(Block).exists(b =>
+      Nodes.exists(n =>
+        Vote(n, b)))
+
+  // Temporal specification
+  val Spec = Init && always(Next, vars)
 }
