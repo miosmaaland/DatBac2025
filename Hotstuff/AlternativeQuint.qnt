@@ -4,16 +4,19 @@ module Burger {
   val second_node: Node = {nodeId: 2}
   val third_node: Node = {nodeId: 3}
   val faulty_node: Node = {nodeId: 4}
+
+  type Round = int
+  type ParentId = int
   
-  type Block = { id: int, rounds: int, parentId: int }
+  type Block = { id: int, rounds: Round, parentId: ParentId }
 
   var parent: int -> Block
   var round: int
   var blocks : Block
   var voteId: int
-//   var blockers: Set[newBlock]
+
   var blockbyid: int -> Block
-//   var parents: Set[int -> Block]
+
   var lock : Node -> Block
   var max : nodes -> round
   var nodes: Set[Node]
@@ -27,10 +30,10 @@ module Burger {
   val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
   action init = all {
-    // blockers' = Set(gen),
+    
     blocks' = gen,
     parent' = Map(0 -> gen),
-    // parents' = Set(Map(0 -> gen)),
+    
     round' = 0,
     voteId' = 1,
     blockbyid' = Map(0 -> gen),
@@ -41,30 +44,7 @@ module Burger {
     votes' = Map(0 -> Set(first_node, second_node, third_node)),
   }
   
-//   val newBlock: Block = { id: 0, rounds: 0, parentId: 0 }
-  // val currentVotes: Block = {id:nextId, rounds: roundId, parentId: lastId}
 
-  // action voteForBlock(b: Block):bool = any {
-  //  def votingNode = oneOf(correct_nodes),
-  //  val currentVotes = votes.get(Set(b.id), Set(votingNode)),
-  //   votes' = Map((b.id, b.rounds) -> currentVotes.put(voter)),
-    
-    // If majority of correct nodes voted for this block, add it to blocks
-    // if (currentVotes.add(voter).size() >= 2) {
-    //   blocks' = blocks.add(b),
-    //   lastId' = b.id,
-    //   roundId' = b.rounds
-    // } else {
-    //   blocks' = blocks
-    // },
-    
-    // // Other variables remain unchanged unless specified
-    // parent' = parent,
-    // round' = round,
-    // nextId' = nextId,
-    // lock' = lock,
-    // max' = max
-  // }
   
   action Vote(b: int, n:Node):bool = all{
     votingNodes' = votingNodes.union(Set(n)),
@@ -79,20 +59,16 @@ module Burger {
     votes' = votes.put(blockbyid.get(b).id, Set(n)),   
   }
 
-//   action step = all {
-//     blocks' = blocks,
-//     round' = round, 
-//     nextId' = nextId + 1
-//   } 
 
-   pure def createBlock(b,p,r)={
+   pure def new(b,p,r)={
     { id: b, rounds: r, parentId: p }
    }
 
   action addBlock(b, p, r) = all {
     r > blockbyid.get(p).rounds,
-    parent' = parent.put(blockbyid.get(p).id, createBlock(b,p,r)),
-    blockbyid' = blockbyid.put(b, createBlock(b,p,r)),
+    parent' = parent.put(blockbyid.get(p).id, new(b,p,r)),
+    blockbyid' = blockbyid.put(b, new(b,p,r)),
+    
   }
 
 
