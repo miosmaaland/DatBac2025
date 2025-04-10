@@ -1,75 +1,104 @@
-module Burger {
-  type Node = { nodeId: int }
-  val first_node : Node = {nodeId: 1}
-  val second_node: Node = {nodeId: 2}
-  val third_node: Node = {nodeId: 3}
-  val faulty_node: Node = {nodeId: 4}
+module Blockchain {
+  type Node = int
+  type Block = int
 
-  type Round = int
-  type ParentId = int
-  
-  type Block = { id: int, rounds: Round, parentId: ParentId }
+  pure val BLOCKS = 0.to(6)
+  pure val NODES = Set(11, 22, 33, 44)
+  pure val C_NODES = Set(11, 22, 33)
+  pure val ROUNDS = 0.to(4)
+  // Not sure if my quorum definition is correct, please check
+  pure val QUORUMS = NODES.powerset().filter(s => s.intersect(C_NODES).size() >= 2)
+  pure val gen = 0
 
   var parent: int -> Block
-  var round: int
-  var blocks : Block
-  var voteId: int
-  var blockbyid: int -> Block
+  var round: Block -> int
+  /// votes stores the votes for every block, i.e.  which node has signed a block.
+  var votes: Block -> nodes
+  /// lock is the locked block for every node
   var lock : Node -> Block
-  var max : nodes -> round
-  var nodes: Set[Node]
-  var correct_nodes: Set[Node]
-  var votes: int -> nodes
-  var votingNodes: Set[Node]
+  /// max is the max signed block for every node
+  var max : Node -> int
 
-       
+  def proposed(b: Block): bool = {
+    round.get(b) != -1
+  }
 
-  val votingNode: Node = {nodeId: voteId}
-  val gen: Block = { id: 0, rounds: 0, parentId: 0 }
+  /// A block is confirmed if a quorum of nodes voted for the block, i.e. it has
+  /// a certificate.
+  def confirmed(block: Block): bool = {
+    block.proposed() and votes.get(block).in(QUORUMS)
+  }
+
+
+
+  /// The propose action adds a new block to the tree. The parent must be
+  /// confirmed, the new block gets a round larger than that of his parent.
+  action propose(b: Block, p: Block, r: int): bool = all {
+    b.in(BLOCKS),
+    not(b.proposed()),
+    p.confirmed(),
+    r > round.get(p),
+    round' = round.set(b, r),
+    parent' = parent.set(b, p),
+    lock' = lock,
+    max' = max,
+    votes' = votes,
+  }
+
+
+  /// Vote models one node voting (or signing) a block.
+  /// The max and lock variables for the node are adjusted.
+  action vote(n: Node, b: Block): bool = all {
+    b.proposed(),
+    n.in(NODES),
+
+    // Below are the rules on signing, but they apply only to correct nodes.
+    n.in(C_NODES) implies 
+      round.get(b) > max.get(n)
+      // Below is the updated rule for simplified hotstuff.
+      and round.get(lock.get(n)) > round.get(parent.get(b)),
+      
+    max' = max.set(n, round.get(b)),
+    votes' = votes.setBy(b, v => v.union(Set(n))),
+    val grandparent = parent.get(parent.get(b))
+    // If the grandparent of the new signed block has a
+    // larger round than the current lock, the lock is updated.
+    lock' = if (round.get(grandparent) > round.get(lock.get(n))) {
+      lock.set(n, grandparent)
+    } else {
+      lock
+    },
+    round' = round,
+    parent' = parent,
+  }
 
   action init = all {
-    
-    blocks' = gen,
-    parent' = Map(0 -> gen),
-    round' = 0,
-    voteId' = 1,
-    blockbyid' = Map(0 -> gen),
-    votingNodes' = Set(),
-    nodes' = Set(first_node,second_node,third_node,faulty_node),
-    correct_nodes' = Set(first_node, second_node, third_node),
-    max' = Map(Set(first_node,second_node,third_node,faulty_node) -> 0),
-    votes' = Map(0 -> Set(first_node, second_node, third_node)),
+    // Initially all blocks but genesis have round -1.
+    round' = BLOCKS.mapBy(b => -1).set(gen, 0),
+    // All blocks are their own parent
+    parent' = BLOCKS.mapBy(b => b),
+    // No block is voted for, except genesis.
+    // All nodes voted for the genesis block.
+    votes' = BLOCKS.mapBy(b => Set()).set(gen, NODES),
+    max' = NODES.mapBy(_ => 0),
+    lock' = NODES.mapBy(_ => gen),
   }
-  
 
-  
-  action Vote(b: int,n:Node): bool = {
-    if (size(votingNodes) < 2) {
-       addToVotes(n)
-    } else {
-      vote(b)
+  action step = {
+    nondet b = BLOCKS.oneOf()
+    any {
+      nondet p = BLOCKS.oneOf()
+      nondet r = ROUNDS.oneOf()
+      propose(b, p, r),
+
+      nondet n = NODES.oneOf()
+      vote(n, b),
     }
   }
-  
-    action addToVotes(n:Node):bool = all{
-       votingNodes' = votingNodes.union(Set(n))
-    }
 
-  action vote(b: int): bool = all {
-    votes' = votes.put(blockbyid.get(b).id, votingNodes)   
-  }
-
-
-   pure def new(b,p,r)={
-    { id: b, rounds: r, parentId: p }
-   }
-
-  action addBlock(b, p, r) = all {
-    r > blockbyid.get(p).rounds,
-    parent' = parent.put(blockbyid.get(p).id, new(b,p,r)),
-    blockbyid' = blockbyid.put(b, new(b,p,r)),
-    
-  }
-
-
+    run exampleTest = init
+    .then(propose(4, 0, 1))
+    .then(vote(11, 4))
+    .then(vote(22, 4))
+    .then(vote(33, 4))
 }
