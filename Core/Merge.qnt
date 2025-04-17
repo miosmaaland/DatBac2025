@@ -76,6 +76,8 @@ module Merge {
     votes' = votes.setBy(b, vs => vs.union(Set(n))),
     max' = max.set(n, round.get(b)),
     
+
+    
     // Update lock if grandparent has higher round
     val grandparent = parent.get(parent.get(b))
     lock' = if (round.get(grandparent) > round.get(lock.get(n))) {

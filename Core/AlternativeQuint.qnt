@@ -9,6 +9,7 @@ module Burger {
   pure val faulty_node = Set(4)
   pure val NODES = Set(1, 2, 3, 4)
   pure val BLOCKID = 0.to(1)
+  pure val ROUNDS = 0.to(4)
   type Round = int
   type ParentId = int
   
@@ -26,8 +27,9 @@ module Burger {
   var nodes: Set[Node]
   // var correct_nodes: Set[Node]
   var votes: int -> Set[Node]
-  var votingNodes: Set[Node]
+  // var votingNodes: Set[Node]
 
+  pure val QUORUMS = NODES.powerset().filter(s => s.intersect(CNODES).size() >= 2)
        
   val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
@@ -52,7 +54,15 @@ module Burger {
   action Vote(b: int, n:Node):bool = all{
     n.in(correct_nodes),
     max' = max.set(n, blockbyid.get(b).rounds),
+    b.in(betterBlock),
     // votes' = betterBlock.mapBy(x => Set()).set(0, NODES),
+    val grandparent = blockbyid.get(blockbyid.get(b).parentId).parentId
+    lock' = if (round.get(grandparent) > round.get(lock.get(n))) {
+      lock.set(n, grandparent)
+    } else {
+      lock
+    },
+    
     vote(b,n)
   }
   
@@ -77,5 +87,21 @@ module Burger {
     votes' = betterBlock.mapBy(x => Set()).set(0, NODES),
   }
 
+    // Non-deterministic step action for simulation
+  // action step = {
+  //   nondet b = betterBlock.oneOf()
+  //   any {
+  //     // Either propose a new block
+  //     nondet p = parentId.oneOf()
+  //     nondet r = ROUNDS.oneOf()
+  //     addBlock(b, p, r),
 
+  //     // Or have a node vote for a block
+  //     nondet n = NODES.oneOf()
+  //     vote(n, b)
+  //   }
+  // }
+      // run burgerTest = 
+      //   init 
+      //     .then(addBlock(1, 0, 1))
 }
