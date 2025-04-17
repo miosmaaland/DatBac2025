@@ -22,14 +22,14 @@ module Burger {
   var betterBlock: Set[IDBLOCK]
   var blockbyid: int -> Block
 
-  var lock : Node -> Block
+  var lock : Node -> betterBlock
   var max : Node -> round
   var nodes: Set[Node]
   // var correct_nodes: Set[Node]
   var votes: int -> Set[Node]
   // var votingNodes: Set[Node]
 
-  pure val QUORUMS = NODES.powerset().filter(s => s.intersect(CNODES).size() >= 2)
+  pure val QUORUMS = NODES.powerset().filter(s => s.intersect(correct_nodes).size() >= 2)
        
   val gen: Block = { id: 0, rounds: 0, parentId: 0 }
 
@@ -41,12 +41,12 @@ module Burger {
     round' = 0,
     voteId' = 1,
     blockbyid' = Map(0 -> gen),
-    votingNodes' = Set(),
+    // votingNodes' = Set(),
     // correct_nodes' = Set(first_node, second_node, third_node),
     // max' = Map(Set(first_node,second_node,third_node,faulty_node) -> 0),
     votes' = Map(0 -> NODES),
     max' = NODES.mapBy(_ => 0),
-    lock' = NODES.mapBy(_ => gen),
+    lock' = NODES.mapBy(_ => 0),
   }
   
 
@@ -57,7 +57,7 @@ module Burger {
     b.in(betterBlock),
     // votes' = betterBlock.mapBy(x => Set()).set(0, NODES),
     val grandparent = blockbyid.get(blockbyid.get(b).parentId).parentId
-    lock' = if (round.get(grandparent) > round.get(lock.get(n))) {
+    lock' = if (blockbyid.get(grandparent).rounds > blockbyid.get(lock.get(n)).rounds) {
       lock.set(n, grandparent)
     } else {
       lock
