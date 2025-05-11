@@ -14,14 +14,12 @@ module Burger {
   var round: int
   var blocks : Block
   var voteId: int
-
   var blockbyid: int -> Block
-
   var lock : Node -> Block
   var max : nodes -> round
   var nodes: Set[Node]
   var correct_nodes: Set[Node]
-  var votes: int -> nodes
+  var votes: int -> Set[Node]
   var votingNodes: Set[Node]
 
        
@@ -33,7 +31,6 @@ module Burger {
     
     blocks' = gen,
     parent' = Map(0 -> gen),
-    
     round' = 0,
     voteId' = 1,
     blockbyid' = Map(0 -> gen),
@@ -46,17 +43,18 @@ module Burger {
   
 
   
-  action Vote(b: int, n:Node):bool = all{
+  action Vote(b: int, n: Node): bool = all{
     votingNodes' = votingNodes.union(Set(n)),
-    vote(b, votingNodes),
+    vote(b),
   }
   
     // action addToVotes(n) = {
     //    votingNodes' = votingNodes.union(n)
     // }
 
-  action vote(b: int, n:votingNodes):bool = all {
-    votes' = votes.put(blockbyid.get(b).id, Set(n)),   
+  action vote(b: int): bool = all {
+    votingNodes == votingNodes,
+    votes' = votes.put(blockbyid.get(b).id, votingNodes),   
   }
 
 
@@ -70,6 +68,7 @@ module Burger {
     blockbyid' = blockbyid.put(b, new(b,p,r)),
     
   }
+  
 
 
 }
